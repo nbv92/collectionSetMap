@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.collectionSetMap.model.Employee;
 import ru.skypro.collectionSetMap.service.EmployeeService;
-import java.util.List;
+import java.util.Map;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -32,7 +32,7 @@ public class EmployeeController {
 
     }
     @GetMapping()
-    public List<Employee> getAll(){
+    public Map<String,Employee> getAll(){
         return employeeService.getAll();
 
     }
