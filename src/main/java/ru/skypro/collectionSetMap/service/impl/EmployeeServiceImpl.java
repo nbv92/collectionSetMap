@@ -1,5 +1,6 @@
 package ru.skypro.collectionSetMap.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import ru.skypro.collectionSetMap.exception.EmployeeAlreadyAddedException;
 import ru.skypro.collectionSetMap.exception.EmployeeNotFoundException;
@@ -13,18 +14,24 @@ import java.util.*;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final int STORAGE_SIZE = 5;
+    @PostConstruct
+    public void initEmployees() {
+        add("Ivan","Ivanov", 50000,1);
+        add("Petr","Petrov", 50001,1);
+        add("Timofey","Timohin", 49999,1);
+    }
     private final Map <String, Employee> employees = new HashMap<>();
     @Override
-    public Employee add(String firstName, String lastName) {
+    public Employee add(String firstName, String lastName, Integer salary, Integer department) {
         if (employees.size() >= STORAGE_SIZE) {
-            throw new EmployeeStorageIsFullException("Превышен лимит количества сотрудников в фирмеdfs");
+            throw new EmployeeStorageIsFullException("Превышен лимит количества сотрудников в фирме");
         }
 
-        if(employees.containsKey(getKey(firstName,lastName))) {
+        if(employees.containsKey(getKey(firstName, lastName))) {
             throw new EmployeeAlreadyAddedException("Уже есть такой сотрудник");
         }
 
-        Employee employee = new Employee(firstName,lastName);
+        Employee employee = new Employee(firstName,lastName, salary, department);
         employees.put(getKey(employee), employee);
         return null;
     }
@@ -52,10 +59,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private static  String getKey (String firstName, String lastName) {
-        return firstName + lastName;
+        return firstName + lastName ;
     }
 
     private static String getKey (Employee employee) {
-        return employee.getFirstName() + employee.getLastName();
+        return employee.getFirstName() + employee.getLastName() ;
     }
 }
