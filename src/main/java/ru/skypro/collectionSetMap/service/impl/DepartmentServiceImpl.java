@@ -4,11 +4,12 @@ import org.springframework.stereotype.Service;
 import ru.skypro.collectionSetMap.model.Employee;
 import ru.skypro.collectionSetMap.service.DepartmentService;
 import ru.skypro.collectionSetMap.service.EmployeeService;
+import ru.skypro.collectionSetMap.exception.EmployeeWithoutMinSalaryException;
+import ru.skypro.collectionSetMap.exception.EmployeeWithoutMaxSalaryException;
 import java.util.List;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
@@ -23,7 +24,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .stream()
                 .filter(employee -> departmentId.equals(employee.getDepartment()))
                 .max(Comparator.comparingInt(employee -> employee.getSalary()))
-                .orElse(null);
+                .orElseThrow(() -> new EmployeeWithoutMaxSalaryException("Нет максимальной зарплаты"));
     }
 
     @Override
@@ -32,7 +33,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .stream()
                 .filter(employee -> departmentId.equals(employee.getDepartment()))
                 .min(Comparator.comparingInt(employee -> employee.getSalary()))
-                .orElse(null);
+                .orElseThrow(() -> new EmployeeWithoutMinSalaryException("Нет минимальной зарплаты"));
+
     }
 
     @Override
