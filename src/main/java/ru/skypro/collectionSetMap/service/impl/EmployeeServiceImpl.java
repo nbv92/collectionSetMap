@@ -1,10 +1,12 @@
 package ru.skypro.collectionSetMap.service.impl;
 
 import jakarta.annotation.PostConstruct;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.skypro.collectionSetMap.exception.EmployeeAlreadyAddedException;
 import ru.skypro.collectionSetMap.exception.EmployeeNotFoundException;
 import ru.skypro.collectionSetMap.exception.EmployeeStorageIsFullException;
+import ru.skypro.collectionSetMap.exception.InvalidNameException;
 import ru.skypro.collectionSetMap.model.Employee;
 import ru.skypro.collectionSetMap.service.EmployeeService;
 
@@ -31,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeAlreadyAddedException("Уже есть такой сотрудник");
         }
 
-        Employee employee = new Employee(firstName,lastName, salary, department);
+        Employee employee = new Employee(StringUtils.capitalize(firstName), StringUtils.capitalize(lastName), salary, department);
         employees.put(getKey(employee), employee);
         return null;
     }
@@ -65,4 +67,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     private static String getKey (Employee employee) {
         return employee.getFirstName() + employee.getLastName() ;
     }
+
+    private void validateNames (String ... names) {
+        for (String name: names) {
+            if (!StringUtils.isAlpha(name)) {
+                throw new InvalidNameException (name + " is invalid");
+            }
+        }
+    }
+
 }
